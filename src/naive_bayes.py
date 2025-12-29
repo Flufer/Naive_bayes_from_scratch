@@ -19,13 +19,13 @@ class GaussianNaiveBayes:
         Обучение модели
         """
         self.classes = np.unique(y)
-        n_samples = X.shape
+        n_samples = X.shape[0]
 
         for cls in self.classes:
             X_cls = X[y == cls]
 
             self.priors[cls] = X_cls.shape[0] / n_samples
-            self.means = X_cls.mean(axis=0)
+            self.means[cls] = X_cls.mean(axis=0)
             self.vars[cls] = X_cls.var(axis=0) + self.eps
 
         return self
