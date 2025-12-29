@@ -32,7 +32,7 @@ class GaussianNaiveBayes:
         """
         Логарифм плотности нормального распределения
         """
-        pass
+        return -0.5 * (np.log(2 * np.pi * var) + ((X - mean) ** 2) / var).sum(axis=1)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
