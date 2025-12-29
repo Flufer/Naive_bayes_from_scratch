@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.covariance import log_likelihood
+
 
 class GaussianNaiveBayes:
     """
@@ -38,10 +40,31 @@ class GaussianNaiveBayes:
         """
         Предсказание классов
         """
-        pass
+        posteriors = []
+
+        for cls in self.classes:
+            log_prior = np.log(self.priors[cls])
+            log_likelihood = self._log_gaussian_pdf(X, self.means[cls], self.vars[cls])
+            posteriors.append(log_prior + log_likelihood)
+
+        posteriors = np.vstack(posteriors).T
+        return self.classes[np.argmax(posteriors, axis=1)]
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
         """
         Предсказание вероятностей классов
         """
-        pass
+        posteriors = []
+
+        for cls in self.classes:
+            log_prior = np.log(self.priors[cls])
+            log_likelihood = self._log_gaussian_pdf(
+                X, self.means[cls], self.vars[cls]
+            )
+            posteriors.append(log_prior + log_likelihood)
+
+        log_probs = np.vstack(posteriors).T
+        log_probs -= log_probs.max(axis=1, keepdims=True)
+
+        probs = np.exp(log_probs)
+        return probs / probs.sum(axis=1, keepdims=True)
