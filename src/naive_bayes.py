@@ -16,7 +16,17 @@ class GaussianNaiveBayes:
         """
         Обучение модели
         """
-        pass
+        self.classes = np.unique(y)
+        n_samples = X.shape
+
+        for cls in self.classes:
+            X_cls = X[y == cls]
+
+            self.priors[cls] = X_cls.shape[0] / n_samples
+            self.means = X_cls.mean(axis=0)
+            self.vars[cls] = X_cls.var(axis=0) + self.eps
+
+        return self
 
     def _log_gaussian_pdf(self, X: np.ndarray, mean: np.ndarray, var: np.ndarray):
         """
@@ -35,4 +45,3 @@ class GaussianNaiveBayes:
         Предсказание вероятностей классов
         """
         pass
-    
